@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_radio_player/flutter_radio_player.dart';
 import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class Meta {
   final String musicTitle;
@@ -72,11 +74,35 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Widg
 
   bool _visible = false;
 
-
   void _toggle() {
     setState(() {
       _visible = !_visible;
     });
+  }
+  Future<bool> launchUrl(
+      Uri url, {
+        LaunchMode mode =  LaunchMode.externalApplication,
+        WebViewConfiguration webViewConfiguration = const WebViewConfiguration(),
+        String? webOnlyWindowName,
+      }) async {
+    final bool isWebURL = url.scheme == 'http' || url.scheme == 'https';
+    if (mode == LaunchMode.inAppWebView && !isWebURL) {
+      throw ArgumentError.value(url, 'url',
+          'To use an in-app web view, you must provide an http(s) URL.');
+    }
+    return await launchUrlString(
+      url.toString(),
+      mode: mode,
+      webViewConfiguration: webViewConfiguration,
+      webOnlyWindowName: webOnlyWindowName,
+    );
+  }
+  _launchUrl(url) async {
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   Widget _portraitMode(){
@@ -86,14 +112,13 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Widg
           heightFactor: 1.0,
           child: Padding(
             padding: EdgeInsets.all(45),
-            child: Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/millicent_portrait_dark.jpg"),
-                )
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  child: Image(image: AssetImage("assets/millicent_portrait_dark.jpg")),
+                  ),
+              ],
             )
           )
         ),
@@ -149,8 +174,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Widg
                                                   Expanded(
                                                   child: ListTile(
                                                     tileColor: Colors.transparent,
-                                                    title: Text('''$vocalTitle''', textAlign: TextAlign.left, style: TextStyle(fontSize: 18), maxLines: 1),
-                                                    subtitle: Text('''$vocalArtist\nVocal''', textAlign: TextAlign.left,style: TextStyle(fontSize: 15), maxLines: 2),
+                                                    title: Text('''$vocalArtist''', textAlign: TextAlign.left, style: TextStyle(fontSize: 18), maxLines: 1),
+                                                    subtitle: Text('''$vocalTitle\nVocal''', textAlign: TextAlign.left,style: TextStyle(fontSize: 15), maxLines: 2),
                                                     trailing: Icon(Icons.search,color: Colors.amber[400],size: 30.0),
                                                   ),
                                                 ),
@@ -158,7 +183,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Widg
                                               ),
                                               onTap: () {
                                                 final uri = Uri.parse("$vocalUrl");
-                                                launchUrl(uri);
+                                                _launchUrl(uri);
                                               }
                                             )
                                           ],
@@ -194,8 +219,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Widg
                                                   Expanded(
                                                   child: ListTile(
                                                     tileColor: Colors.transparent,
-                                                    title: Text('''$musicTitle''', textAlign: TextAlign.left, style: TextStyle(fontSize: 18), maxLines: 1),
-                                                    subtitle: Text('''$musicArtist\nMusic''', textAlign: TextAlign.left,style: TextStyle(fontSize: 15), maxLines: 2),
+                                                    title: Text('''$musicArtist''', textAlign: TextAlign.left, style: TextStyle(fontSize: 18), maxLines: 1),
+                                                    subtitle: Text('''$musicTitle\nMusic''', textAlign: TextAlign.left,style: TextStyle(fontSize: 15), maxLines: 2),
                                                     trailing: Icon(Icons.search,color: Colors.amber[500],size: 30.0),
                                                   ),
                                                 ),
@@ -203,7 +228,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Widg
                                               ),
                                               onTap: () {
                                                 final url = Uri.parse("$musicUrl");
-                                                launchUrl(url);
+                                                _launchUrl(url);
                                               },
                                             )
                                           ],
@@ -230,15 +255,15 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Widg
                                                 children:[Expanded(
                                                   child: ListTile(
                                                     tileColor: Colors.transparent,
-                                                    title: Text('''$fieldTitle''', textAlign: TextAlign.left, style: TextStyle(fontSize: 18), maxLines: 1),
-                                                    subtitle:Text('''$fieldArtist\nField Recording''', textAlign: TextAlign.left, style: TextStyle(fontSize: 15), maxLines: 2),
+                                                    title: Text('''$fieldArtist''', textAlign: TextAlign.left, style: TextStyle(fontSize: 18), maxLines: 1),
+                                                    subtitle:Text('''$fieldTitle\nField Recording''', textAlign: TextAlign.left, style: TextStyle(fontSize: 15), maxLines: 2),
                                                     trailing: Icon(Icons.search,color: Colors.amber[600],size: 30.0),
                                                   ),
                                                 ),]
                                               ),
                                               onTap: () {
                                                 final url = Uri.parse("$fieldUrl");
-                                                launchUrl(url);
+                                                _launchUrl(url);
                                               },
                                             )
                                           ],
@@ -312,10 +337,13 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Widg
 
   @override
   void initState() {
-    super.initState();
     WidgetsBinding.instance!.addObserver(this);
     initRadioService();
-    initSse();
+    Future.delayed(const Duration(milliseconds: 3000), ()
+    {
+      initSse();
+    });
+    super.initState();
   }
 
   @override
@@ -402,10 +430,10 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Widg
             statusBarColor: Color(0xff0d2f39),
 
             // Status bar brightness (optional)
-            statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
-            statusBarBrightness: Brightness.light, // For iOS (dark icons)
+            statusBarIconBrightness: Brightness.light, // For Android (dark icons)
+            statusBarBrightness: Brightness.dark, // For iOS (dark icons)
           ),
-          toolbarHeight: 2,
+          toolbarHeight: 10,
           elevation: 0,
           backgroundColor: Color(0xff0d2f39),
           title: Column(
