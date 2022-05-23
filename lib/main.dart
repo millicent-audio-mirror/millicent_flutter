@@ -8,7 +8,6 @@ import 'package:flutter_radio_player/flutter_radio_player.dart';
 import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class Meta {
   final String musicTitle;
@@ -329,7 +328,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Widg
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver((this));
+    WidgetsBinding.instance.removeObserver((this));
     _controller.dispose();
     metaController?.close();
     super.dispose();
@@ -337,7 +336,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin, Widg
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     initRadioService();
     Future.delayed(const Duration(milliseconds: 3000), ()
     {
