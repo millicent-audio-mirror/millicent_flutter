@@ -1,4 +1,4 @@
-package me.sithiramunasinghe.flutter.flutter_radio_player_example
+package org.millicent.radio.player
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
