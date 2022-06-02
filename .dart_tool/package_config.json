@@ -69,7 +69,7 @@
     },
     {
       "name": "flutter_radio_player",
-      "rootUri": "../../../FlutterRadioPlayer-master/FlutterRadioPlayer-master",
+      "rootUri": "../../FlutterRadioPlayer-master/FlutterRadioPlayer-master",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -236,7 +236,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2022-06-02T13:01:33.037463Z",
+  "generated": "2022-06-02T14:58:52.041378Z",
   "generator": "pub",
   "generatorVersion": "2.17.1"
 }

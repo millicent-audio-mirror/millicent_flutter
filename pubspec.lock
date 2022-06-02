@@ -79,7 +79,7 @@ packages:
   flutter_radio_player:
     dependency: "direct main"
     description:
-      path: "../../FlutterRadioPlayer-master/FlutterRadioPlayer-master"
+      path: "../FlutterRadioPlayer-master/FlutterRadioPlayer-master"
       relative: true
     source: path
     version: "1.1.0"

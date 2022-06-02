@@ -82,7 +82,7 @@
         <entry key="flutter_radio_player">
           <value>
             <list>
-              <option value="$PROJECT_DIR$/../../FlutterRadioPlayer-master/FlutterRadioPlayer-master/lib" />
+              <option value="$PROJECT_DIR$/../FlutterRadioPlayer-master/FlutterRadioPlayer-master/lib" />
             </list>
           </value>
         </entry>
@@ -308,7 +308,7 @@
       <root url="file://$USER_HOME$/development/flutter/bin/cache/pkg/sky_engine/lib" />
       <root url="file://$USER_HOME$/development/flutter/packages/flutter/lib" />
       <root url="file://$USER_HOME$/development/flutter/packages/flutter_web_plugins/lib" />
-      <root url="file://$PROJECT_DIR$/../../FlutterRadioPlayer-master/FlutterRadioPlayer-master/lib" />
+      <root url="file://$PROJECT_DIR$/../FlutterRadioPlayer-master/FlutterRadioPlayer-master/lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
